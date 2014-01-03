@@ -1,0 +1,22 @@
+TODO
+----
+
+- OS X / AU support
+- Save/restore plugin state
+- Context menu for TabPresetEditor:
+  - "copy"
+  - "paste"
+  - "paste as new"
+  - "set as default"
+- Check destructors
+- Cleanup code
+
+
+
+Ideas for version 2.1
+---------------------
+
+- EQ with HP/dip/LP
+- Adjustable stereo base for direct sound
+- Display room acoustical parameters in TabMain
+- RTAS Support?

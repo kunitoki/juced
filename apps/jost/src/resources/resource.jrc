@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<config resourceName="Resource" outputName="Resources">
+  <file filename="jost_about.png" name="jost_about" extension="png"/>
+  <file filename="jost_icons.zip" name="jost_icons" extension="zip"/>
+  <file filename="jost_midipads.zip" name="jost_midipads" extension="zip"/>
+</config>

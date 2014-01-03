@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<config resourceName="Wavetables" outputName="ResourceFile">
+  <file filename="asym_saw.raw" name="asym_saw" extension="raw"/>
+  <file filename="bass_tone.raw" name="bass_tone" extension="raw"/>
+  <file filename="buzz_1.raw" name="buzz_1" extension="raw"/>
+  <file filename="buzz_2.raw" name="buzz_2" extension="raw"/>
+  <file filename="dark_strings.raw" name="dark_strings" extension="raw"/>
+  <file filename="deep_ring_1.raw" name="deep_ring_1" extension="raw"/>
+  <file filename="deep_ring_2.raw" name="deep_ring_2" extension="raw"/>
+  <file filename="epiano_tone.raw" name="epiano_tone" extension="raw"/>
+  <file filename="ghost_1.raw" name="ghost_1" extension="raw"/>
+  <file filename="ghost_2.raw" name="ghost_2" extension="raw"/>
+  <file filename="ghost_3.raw" name="ghost_3" extension="raw"/>
+  <file filename="ghost_4.raw" name="ghost_4" extension="raw"/>
+  <file filename="grind_1.raw" name="grind_1" extension="raw"/>
+  <file filename="grind_2.raw" name="grind_2" extension="raw"/>
+  <file filename="more_strings.raw" name="more_strings" extension="raw"/>
+  <file filename="multi_pulse.raw" name="multi_pulse" extension="raw"/>
+  <file filename="no_name.raw" name="no_name" extension="raw"/>
+  <file filename="one_string.raw" name="one_string" extension="raw"/>
+  <file filename="organ_1.raw" name="organ_1" extension="raw"/>
+  <file filename="organ_2.raw" name="organ_2" extension="raw"/>
+  <file filename="phasing_sqr.raw" name="phasing_sqr" extension="raw"/>
+  <file filename="pulse.raw" name="pulse" extension="raw"/>
+  <file filename="saw.raw" name="saw" extension="raw"/>
+  <file filename="sharp_1.raw" name="sharp_1" extension="raw"/>
+  <file filename="sharp_2.raw" name="sharp_2" extension="raw"/>
+  <file filename="sine.raw" name="sine" extension="raw"/>
+  <file filename="soft_1.raw" name="soft_1" extension="raw"/>
+  <file filename="soft_2.raw" name="soft_2" extension="raw"/>
+  <file filename="soft_3.raw" name="soft_3" extension="raw"/>
+  <file filename="soft_4.raw" name="soft_4" extension="raw"/>
+  <file filename="square.raw" name="square" extension="raw"/>
+  <file filename="strings_1.raw" name="strings_1" extension="raw"/>
+  <file filename="strings_2.raw" name="strings_2" extension="raw"/>
+  <file filename="string_fuzz.raw" name="string_fuzz" extension="raw"/>
+  <file filename="syn_choir_1.raw" name="syn_choir_1" extension="raw"/>
+  <file filename="syn_choir_2.raw" name="syn_choir_2" extension="raw"/>
+  <file filename="syn_choir_3.raw" name="syn_choir_3" extension="raw"/>
+  <file filename="thin_1.raw" name="thin_1" extension="raw"/>
+  <file filename="thin_2.raw" name="thin_2" extension="raw"/>
+  <file filename="two_strings.raw" name="two_strings" extension="raw"/>
+  <file filename="voice_1.raw" name="voice_1" extension="raw"/>
+  <file filename="voice_2.raw" name="voice_2" extension="raw"/>
+</config>

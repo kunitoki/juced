@@ -1,0 +1,190 @@
+/*
+  ==============================================================================
+
+   This file is part of the JUCE library - "Jules' Utility Class Extensions"
+   Copyright 2004-9 by Raw Material Software Ltd.
+
+  ------------------------------------------------------------------------------
+
+   JUCE can be redistributed and/or modified under the terms of the GNU General
+   Public License (Version 2), as published by the Free Software Foundation.
+   A copy of the license is included in the JUCE distribution, or can be found
+   online at www.gnu.org/licenses.
+
+   JUCE is distributed in the hope that it will be useful, but WITHOUT ANY
+   WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+   A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+  ------------------------------------------------------------------------------
+
+   To release a closed-source product which uses JUCE, commercial licenses are
+   available: visit www.rawmaterialsoftware.com/juce for more information.
+
+  ==============================================================================
+*/
+
+#include "juce_AudioFilterStreamer.h"
+#include "../juce_IncludeCharacteristics.h"
+
+
+//==============================================================================
+AudioFilterStreamer::AudioFilterStreamer (AudioProcessor& filterToUse)
+    : filter (filterToUse),
+      isPlaying (false),
+      sampleRate (0),
+      emptyBuffer (1, 32)
+{
+    filter.setPlayConfigDetails (JucePlugin_MaxNumInputChannels, JucePlugin_MaxNumOutputChannels, 0, 0);
+
+    filter.setPlayHead (this);
+}
+
+AudioFilterStreamer::~AudioFilterStreamer()
+{
+    if (isPlaying)
+        audioDeviceStopped();
+}
+
+void AudioFilterStreamer::audioDeviceIOCallback (const float** inputChannelData,
+                                                 int totalNumInputChannels,
+                                                 float** outputChannelData,
+                                                 int totalNumOutputChannels,
+                                                 int numSamples)
+{
+    MidiBuffer midiBuffer;
+    midiCollector.removeNextBlockOfMessages (midiBuffer, numSamples);
+
+    int i, numActiveInChans = 0, numActiveOutChans = 0;
+    int numOutsWanted = filter.getNumOutputChannels();
+    const int numInsWanted = filter.getNumInputChannels();
+
+    for (i = 0; i < jmin (numInsWanted, totalNumInputChannels); ++i)
+        if (inputChannelData[i] != 0)
+            inChans [numActiveInChans++] = (float*) inputChannelData[i];
+
+    while (numActiveInChans < numInsWanted)
+        inChans [numActiveInChans++] = emptyBuffer.getSampleData (0, 0);
+
+    for (i = 0; i < jmin (numOutsWanted, totalNumOutputChannels); ++i)
+        if (outputChannelData[i] != 0)
+            outChans [numActiveOutChans++] = outputChannelData[i];
+
+    i = 0;
+    while (numActiveOutChans < numOutsWanted)
+        outChans [numActiveOutChans++] = emptyBuffer.getSampleData (i++, 0);
+
+    {
+        const ScopedLock sl (filter.getCallbackLock());
+
+        if (filter.isSuspended())
+        {
+            if (numActiveOutChans > 0)
+            {
+                AudioSampleBuffer output (outChans, numActiveOutChans, numSamples);
+                output.clear();
+            }
+        }
+        else
+        {
+            if (numActiveOutChans > 0)
+            {
+                AudioSampleBuffer output (outChans, numActiveOutChans, numSamples);
+
+                if (numActiveInChans > 0)
+                {
+                    AudioSampleBuffer input (inChans, numActiveInChans, numSamples);
+                    for (int i = jmin (numActiveOutChans, numActiveInChans); --i >= 0;)
+                        output.copyFrom (i, 0, input, i, 0, numSamples);
+                }
+
+                filter.processBlock (output, midiBuffer);
+            }
+            else
+            {
+                if (numActiveInChans > 0)
+                {
+                    AudioSampleBuffer input (inChans, numActiveInChans, numSamples);
+                    filter.processBlock (input, midiBuffer);
+                }
+                else
+                {
+                    filter.processBlock (emptyBuffer, midiBuffer);
+                }
+            }
+        }
+    }
+
+    while (numOutsWanted < numActiveOutChans)
+        zeromem (outChans[numOutsWanted++], sizeof (float) * numSamples);
+}
+
+void AudioFilterStreamer::audioDeviceAboutToStart (AudioIODevice* device)
+{
+    sampleRate = device->getCurrentSampleRate();
+
+    isPlaying = true;
+
+    emptyBuffer.setSize (1 + filter.getNumOutputChannels(),
+                         jmax (2048, device->getCurrentBufferSizeSamples() * 2));
+    emptyBuffer.clear();
+
+    midiCollector.reset (sampleRate);
+
+    filter.prepareToPlay (device->getCurrentSampleRate(),
+                          device->getCurrentBufferSizeSamples());
+}
+
+void AudioFilterStreamer::audioDeviceStopped()
+{
+    isPlaying = false;
+    filter.releaseResources();
+    midiCollector.reset (sampleRate > 0 ? sampleRate : 44100.0);
+    emptyBuffer.setSize (1, 32);
+}
+
+void AudioFilterStreamer::handleIncomingMidiMessage (MidiInput* source, const MidiMessage& message)
+{
+#if JucePlugin_WantsMidiInput
+    midiCollector.addMessageToQueue (message);
+#endif
+}
+
+bool AudioFilterStreamer::getCurrentPosition (AudioPlayHead::CurrentPositionInfo& info)
+{
+    return false;
+}
+
+
+//==============================================================================
+AudioFilterStreamingDeviceManager::AudioFilterStreamingDeviceManager()
+    : streamer (0)
+{
+}
+
+AudioFilterStreamingDeviceManager::~AudioFilterStreamingDeviceManager()
+{
+    setFilter (0);
+    clearSingletonInstance();
+}
+
+void AudioFilterStreamingDeviceManager::setFilter (AudioProcessor* filterToStream)
+{
+    if (streamer != 0)
+    {
+        removeMidiInputCallback (String::empty, streamer);
+        removeAudioCallback (streamer);
+
+        delete streamer;
+        streamer = 0;
+    }
+
+    if (filterToStream != 0)
+    {
+        streamer = new AudioFilterStreamer (*filterToStream);
+
+        addAudioCallback (streamer);
+        addMidiInputCallback (String::empty, streamer);
+    }
+}
+
+juce_ImplementSingleton (AudioFilterStreamingDeviceManager);

@@ -1,0 +1,109 @@
+
+import os
+
+# ========================================================================
+# VARIABLES ==============================================================
+# ========================================================================
+
+vars = Variables('config.py')
+vars.Add (BoolVariable ('DEBUG', 'Set to True to build for debug', False))
+vars.Add (BoolVariable ('VERBOSE', 'Set to True to build verbose', False))
+vars.Add (EnumVariable ('COLOR', 'Set what you want to compile', 'red', allowed_values=('red', 'green', 'blue')))
+
+# ========================================================================
+# ENVIRONMENT ============================================================
+# ========================================================================
+
+env = Environment(ENV = os.environ, variables = vars)
+
+if env ['VERBOSE'] == True:
+    env['CCCOMSTR'] = "Compiling $TARGET"
+    env['LINKCOMSTR'] = "Linking $TARGET"
+
+env.PrependENVPath('PATH', '/usr/local/bin')
+env.AppendENVPath('LIB', '/usr/local/lib')
+
+Decider('MD5-timestamp')
+SetOption('implicit_cache', 0)
+# SetOption('implicit-deps-changed', 1)
+
+
+# ========================================================================
+# CONFIGURATION ==========================================================
+# ========================================================================
+
+include_path=[]
+include_path.extend (['.', '/usr/include'])
+
+libs_path=[]
+libs_path.extend (['/usr/lib'])
+
+files=[]
+files.extend (Glob('*.c'))
+files.extend (Glob('*.h'))
+
+libs=[]
+libs.extend (['m', 'pthread'])
+
+ccflags=[]
+ccflags.extend (['-DHELLO', '-DDEBUG']);
+
+linkflags=[]
+linkflags.extend ([]);
+
+
+# ========================================================================
+# SPECIFIC PLATFORM ======================================================
+# ========================================================================
+
+if env['PLATFORM'] == 'posix':
+    print "We are on POSIX"
+    
+elif env['PLATFORM'] == 'win32':
+    print "We are on WIN32"
+
+elif env['PLATFORM'] == 'Darwin':
+    print "We are on MacOSX"
+
+else:
+    print "We don't know where to go"
+
+
+# ========================================================================
+# COMPILATION STAGE ======================================================
+# ========================================================================
+#hello = env.Program (target = 'hello',
+#                     source = files,
+#                     CCFLAGS = ccflags,
+#                     LINKFLAGS = linkflags,
+#                     CPPPATH = include_path,
+#                     LIBPATH = libs_path,
+#                     LIBS = libs)
+
+hello = env.SharedLibrary (target = 'hello',
+                           source = files,
+#                           CCFLAGS = ccflag,
+                           CPPPATH = include_path)
+
+
+# ========================================================================
+# HELP AND USAGE =========================================================
+# ========================================================================
+
+Help(vars.GenerateHelpText(env))
+
+#Help("""
+#    Type: 'scons program' to build the production program,
+#          'scons debug' to build the debug version.
+#""")
+
+
+
+
+# ENVIRONMENT DICTIONARY
+#dict = env.Dictionary()
+#keys = dict.keys()
+#keys.sort()
+#for key in keys:
+#    print "construction variable = '%s', value = '%s'" % (key, dict[key])
+

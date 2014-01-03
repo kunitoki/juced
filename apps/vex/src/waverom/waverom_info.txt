@@ -1,0 +1,13 @@
+This folder contains the audio samples used by VEX's oscillator.
+
+You can add samples by just dropping them in here. The practical limit is about 50 waveforms.
+
+The format is raw unsigned 2-byte integer, no fluff. 
+
+The file name extension has to be ".raw".
+
+Files that are 1k (512 sampels) sit better in the CPU cache and result in less cpu use.
+
+The sample size should be a power of 2.
+
+The pitch has to be 86 HZ or possibly 172 HZ to fit evenly.

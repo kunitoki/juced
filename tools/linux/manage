@@ -1,0 +1,429 @@
+#!/bin/bash
+
+manage_bin=`basename $0`
+tools_directory=`pwd`
+root_directory="$tools_directory/../.."
+juce_directory="$root_directory/juce"
+apps_directory="$root_directory/apps"
+wrapper_directory="$juce_directory/extras/audio plugins/wrapper"
+build_directory="build"
+bin_directory="bin"
+src_directory="src"
+
+premake_file="--file premake.lua"
+premake_options="--cc gcc --target gnu --os linux"
+premake_win32_options="--target vs2005 --os windows"
+
+premake_bin="$tools_directory/premake"
+amalgamator_bin="$tools_directory/amalgamator"
+
+OPERATION="usage"
+SUBJECTS="lib"
+
+
+# == handle parameter ============================================
+#while getopts "make:clean:exec:package:what:help" option
+#do
+#    case $option in
+#        make)     OPERATION="make" ;;
+#        clean)    OPERATION="clean" ;;
+#        exec)     OPERATION="exec" ;;
+#        package)  OPERATION="package" ;;
+#        help)     OPERATION="help" ;;
+#        usage)    OPERATION="usage" ;;
+#        what)     SUBJECTS=$OPTARG ;;
+#        \?)  echo "Wrong argument, usage is ...." ;;
+#        *)   echo "Not expected input, try again!" ;;
+#    esac
+#done
+#echo $OPERATION
+#echo $SUBJECTS
+#exit 
+
+if [[ $# -gt 1 ]]
+then
+    OPERATION=$1
+    SUBJECTS=$2
+    shift
+    shift
+elif [[ $# -gt 0 ]]
+then
+    OPERATION=$1
+    shift
+fi
+
+
+# == functions ===================================================
+
+# handle signal int
+function control_sigint
+{
+    echo "==== Exiting ===="
+    exit $?
+}
+
+# making JUCE+ library
+function make_library
+{
+    local current=`pwd`
+
+    cd "$juce_directory/build/linux"
+    touch `find "$juce_directory/build/linux" -iname "*.c*" | head -n 1`
+
+    $premake_bin $premake_file $premake_options $1 $2 $3 $4 $5 $6 $7 $8
+    echo
+    make CONFIG=Debug
+    echo
+    make CONFIG=Release
+    echo
+
+    if [ $? = 0 ]; then
+        echo "==== Finalizing juce ===="
+        cd $root_directory
+        $amalgamator_bin juce | grep writing
+    fi
+
+    cd "$current"
+}
+
+# make applications
+function make_application
+{
+    local current=`pwd`
+    local name="$apps_directory/$1/$build_directory/"
+    local srcdir="$apps_directory/$1/$src_directory/"
+
+    if [ -d "$name" ]; then
+
+        for project in linux VST_Linux
+        do
+            compileprefix="$name/$project"
+            if [ -d "$compileprefix" ]; then
+                cd "$compileprefix"
+                $premake_bin $premake_file $premake_options $2 $3 $4 $5 $6 $7 $8
+                echo
+                touch `find "$srcdir" -iname "*.c*" | head -n 1`
+        	    make CONFIG=Release
+        	    echo
+            	make CONFIG=Debug
+            	echo
+	            cd "$current"
+            fi
+        done
+
+        for project in VST_win32
+        do
+            compileprefix="$name/$project"
+            if [ -d "$compileprefix" ]; then
+                cd "$compileprefix"
+                $premake_bin $premake_file $premake_win32_options $2 $3 $4 $5 $6 $7 $8
+                echo
+	            cd "$current"
+            fi
+        done
+
+    else
+        echo "==== Error in make_application ===="
+        echo "Path $name doesn't exists"
+    fi
+
+    cd "$current"
+}
+
+# make tests
+function make_tests
+{
+    local current=`pwd`
+    local name="$root_directory/tests/$build_directory/"
+    local srcdir="$root_directory/tests/$src_directory/"
+
+    for project in linux
+    do
+        compileprefix="$name/$project"
+        if [ -d "$compileprefix" ]; then
+            cd "$compileprefix"
+            $premake_bin $premake_file $premake_options $1 $2 $3 $4 $5 $6 $7 $8
+            echo
+            touch `find "$srcdir" -iname "*.c*" | head -n 1`
+    	    make CONFIG=Release
+    	    echo
+        	make CONFIG=Debug
+        	echo
+            cd $current
+        fi
+    done
+
+    # execute them
+#    name="$root_directory/$bin_directory/"
+#    if [ -d "$name" ]; then
+#        $name/unit_testing $1
+#    else
+#        echo "==== Error in make_tests ===="
+#        echo "Executable for unit testing doesn't exists"
+#    fi
+
+    cd "$current"
+}
+
+# clean JUCE+ library 
+function clean_library
+{
+    local current=`pwd`
+
+    cd "$juce_directory/build/linux"
+    make CONFIG=Release clean
+    make CONFIG=Debug clean
+
+    cd "$current"
+}
+
+# clean applications
+function clean_application
+{
+    local current=`pwd`
+    local name="$apps_directory/$1/$build_directory/"
+
+    if [ -d "$name" ]; then
+        for project in linux VST_Linux
+        do
+            compileprefix="$name/$project"
+            if [ -d "$compileprefix" ]; then
+                cd "$compileprefix"
+                make CONFIG=Release clean
+            	make CONFIG=Debug clean
+              	rm -Rf "$compileprefix/../../$bin_directory"
+	            cd "$current"
+            fi
+        done
+    else
+        echo "==== Error in clean_application ===="
+        echo "Path $name doesn't exists"
+    fi
+    
+    cd "$current"
+}
+
+# execute application
+function execute_application
+{
+    local name="$apps_directory/$1/$bin_directory"
+
+    if [ -d "$name" ]; then
+        $name/$1 $2 $3 $4 $5 $6 $7 $8
+    else
+
+        name="$root_directory/$bin_directory/"
+        if [ -d "$name" ]; then
+            $name/$1 $2 $3 $4 $5 $6 $7 $8
+        else        
+            echo "==== Error in execute_application ===="
+            echo "Executable for application $1 doesn't exists"
+        fi
+    fi   
+}
+
+# debug application
+function debug_application
+{
+    local name="$apps_directory/$1/$bin_directory"
+
+    if [ -d "$name" ]; then
+        gdb "$name/$1"
+    else
+
+        name="$root_directory/$bin_directory/"
+        if [ -d "$name" ]; then
+            gdb "$name/$1" --args $2 $3 $4 $5 $6 $7 $8
+        else        
+            echo "==== Error in debug_application ===="
+            echo "Executable for application $1 doesn't exists"
+        fi
+    fi   
+}
+
+# == mega switch ===================================================
+trap control_sigint SIGINT
+
+case "$OPERATION" in
+'exec')
+
+    execute_application $SUBJECTS "$@"
+
+    ;;
+'gdb')
+
+    debug_application $SUBJECTS "$@"
+
+    ;;
+'tests')
+
+    make_tests "$@"
+
+    ;;
+'make')
+
+    if [ "$SUBJECTS" == "all" -o "$SUBJECTS" == "lib" ]; then
+        make_library "$@"
+    fi
+
+    if [ "$SUBJECTS" == "all" -o "$SUBJECTS" == "apps" ]; then
+        for plugin in `ls $apps_directory`
+        do
+            make_application $plugin "$@"
+        done
+    fi
+
+    if [ "$SUBJECTS" != "all" -a "$SUBJECTS" != "apps" -a "$SUBJECTS" != "lib" ]; then
+        make_application $SUBJECTS "$@"
+    fi
+
+    ;;
+'clean')
+
+    if [ "$SUBJECTS" == "all" -o "$SUBJECTS" == "lib" ]; then
+        clean_library
+    fi
+
+    if [ "$SUBJECTS" == "all" -o "$SUBJECTS" == "apps" ]; then
+        for plugin in `ls $apps_directory`
+        do
+            clean_application $plugin
+        done
+    fi
+
+    if [ "$SUBJECTS" != "all" -a "$SUBJECTS" != "apps" -a "$SUBJECTS" != "lib" ]; then
+        clean_application $SUBJECTS
+    fi
+
+    ;;
+'package')
+
+    echo "==== Packaging application $SUBJECTS ===="
+
+    ORIGINALDIR="$SUBJECTS"
+    PACKAGE="$SUBJECTS"
+    VERSION="v$1"
+    PLUGINDIR="${PACKAGE}-${VERSION}"
+    PLUGINSRCPACKAGE="${PACKAGE}_src-${VERSION}.tar.bz2"
+    PLUGINBINPACKAGE="${PACKAGE}-${VERSION}.tar.bz2"
+
+    rm "$PLUGINSRCPACKAGE" >/dev/null 2>&1
+    rm -Rf "$PLUGINDIR" >/dev/null 2>&1
+
+    # copy files over
+    cp -R --force "$apps_directory/$ORIGINALDIR" .
+    cp -R --force "$wrapper_directory" "$ORIGINALDIR"
+    cp "$juce_directory/juce_amalgamated.h" "$ORIGINALDIR/src/"
+    cp "$juce_directory/juce_amalgamated.cpp" "$ORIGINALDIR/src/"
+    cp premake.lua "$ORIGINALDIR/build"
+    mv "$ORIGINALDIR" "$PLUGINDIR"
+
+    # sed configuration for lua
+    sed -i -e "s:overrideAmalgama = false:overrideAmalgama = true:g" "$PLUGINDIR/build/premake.lua"
+    sed -i -e "s:finalRelease = false:finalRelease = true:g" "$PLUGINDIR/build/premake.lua"
+
+    # rebuild Makefiles
+    for PROJECT in linux VST_Linux
+    do
+        PROJECTDIR="$PLUGINDIR/build/$PROJECT/"
+        FILETOSED="$PROJECTDIR/premake.lua"
+        if [ -e "$FILETOSED" ]; then
+            sed -i -e "s:../../../tools/linux/::g" "$FILETOSED"
+        fi
+
+        current_directory=`pwd`
+
+        cd "$PROJECTDIR"
+        $premake_bin $premake_file $premake_options >/dev/null 2>&1
+
+        cd "$current_directory"
+     done
+
+    # do package
+    tar --exclude=bin \
+        --exclude=build/bridge \
+        --exclude=.svn \
+        -c "$PLUGINDIR/" | bzip2 -9 > "$PLUGINSRCPACKAGE"
+
+    # prepare binary package
+    rm "$PLUGINBINPACKAGE" >/dev/null 2>&1
+
+    rm -Rf "$PLUGINDIR"
+    mkdir -p "$PLUGINDIR"
+
+    cp "$apps_directory/$ORIGINALDIR/readme.txt" "$PLUGINDIR/"
+
+    if [ -f "$root_directory/bin/$PACKAGE" ]; then
+        cp "$root_directory/bin/$PACKAGE" "$PLUGINDIR/"
+    elif [ -f "$apps_directory/$ORIGINALDIR/bin/$PACKAGE" ]; then
+        cp "$apps_directory/$ORIGINALDIR/bin/$PACKAGE" "$PLUGINDIR/"
+    else
+        echo "No Standalone application available !"
+    fi
+
+    if [ -f "$root_directory/bin/${PACKAGE}vst.so" ]; then
+        cp "$root_directory/bin/${PACKAGE}vst.so" "$PLUGINDIR/"
+    elif [ -f "$apps_directory/$ORIGINALDIR/bin/${PACKAGE}vst.so" ]; then
+        cp "$apps_directory/$ORIGINALDIR/bin/${PACKAGE}vst.so" "$PLUGINDIR/"
+    else
+        echo "No VST plugin available !"
+    fi
+
+    # UPX binary application
+    if [ -z `which upx 2>/dev/null` ]; then
+        true
+    else
+        if [ -f "$PLUGINDIR/$PACKAGE" ]; then
+            echo
+            upx -9 "$PLUGINDIR/$PACKAGE"
+            echo
+        fi
+    fi
+
+    tar -c "$PLUGINDIR/" | bzip2 -9 > "$PLUGINBINPACKAGE"
+
+    # cleanup
+    rm -Rf "$PLUGINDIR"
+
+    echo "Done."
+
+    ;;
+'help')
+
+   echo "Usage: $manage_bin <command> [.. <subject> [.. <configure_opts>]]"
+   echo ""
+   echo "<command>"
+   echo "  make             make libraries and apps or both"
+   echo "  exec             execute a specific application"
+   echo "  gdb              debug (using gdb) a specific application"
+   echo "  clean            cleanup libraries compilation objects"
+   echo "  tests            make and execute tests"
+   echo "  package          package final apps"
+   echo ""
+   echo "<subjects>"
+   echo "  all               both library and applications"
+   echo "  lib               library only"
+   echo "  apps              all applications"
+   echo "  *appname*         name of application directory"
+   echo ""
+   echo "<configure_opts>"
+   echo "  help            configure help info"
+   echo ""
+   echo "Examples:"
+   echo "  $manage_bin make jost"
+   echo "  $manage_bin make jost vstsdk-version 2.4 disable-ladspa 1 enable-lash 1"
+   echo "  $manage_bin exec jost"
+   echo "  $manage_bin package jost 0.5.3"
+
+   ;;
+*)
+
+   echo "Usage: $manage_bin <command> [.. <subject> [.. <configure_opts>]]"
+   echo ""
+   echo "For context help use: $manage_bin help"
+
+   ;;
+esac
+
+cd $current
+

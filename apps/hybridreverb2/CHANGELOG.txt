@@ -1,0 +1,13 @@
+Version 2.0.2
+-------------
+* Windows: "wrong BaseDir value in Registry" bug fixed
+
+
+Version 2.0.1
+-------------
+* Linux and OS X: use SSE instructions for block multiplications
+
+
+Version 2.0
+-----------
+* Release candidate for KVR DC'09

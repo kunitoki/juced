@@ -1,0 +1,5 @@
+{
+   jost(Cond)
+   Memcheck:Cond
+   obj:/home/kororaa/JuceAudioPluginLinux/plugins/Jost/bin/jost*
+}

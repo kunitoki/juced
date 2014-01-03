@@ -1,0 +1,2 @@
+LIBRARY eqinox
+EXPORTS main=VstPluginMain

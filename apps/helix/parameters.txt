@@ -1,0 +1,59 @@
+OX = oscillator
+
+> On      - oscillator activity        - switch 2 (0-0.5 0.5-1)
+> Amp     - oscillator amp             - bipolar from 0.5  (0-0.5 0.5=0db 0.5-1)
+> Pan     - panning                    - 0..1
+> HMCS    - ?                          - switch (?)
+> Ocs     - octave                     - stepped -8 +8
+> Semi    - semitones                  - stepped -24 +24
+> Det     - cents                      - stepped -63 +63
+> Phs     - phase                      - 0..1 (?)
+> Free    - freerun                    - switch 2 (?)
+
+> US      - multi oscillator width     - 0..1
+> USS     - multi oscillator           - switch 2 (0-0.5 0.5-1)
+> S-C     - super count                - switch 0..8
+> S-P     - super phase                - 0..1
+> S-F     - super free                 - 0..1
+> S-W     - super wide                 - 0..1
+
+> Form    - wavetype                   - 0 (wave)
+                                         1 ()
+
+> ShpTb   - shape 0 time bend          - 0..1
+> ShpTm   - shape 0 time mirror        - 0..1
+> ShpTw   - shape 0 time wrap          - 0..1
+> ShpAm   - shape 0 amp mirror         - 0..1
+> ShpAw   - shape 0 amp wrap           - 0..1
+> ShpAb   - shape 0 amp bitreduce      - 0..1
+> ShpAo   - shape 0 amp octave         - 0..1
+> ShpAop  - shape 0 amp octave phase   - 0..1
+> ShpAh   - shape 0 amp high pass      - 0..1
+> ShpAl   - shape 0 amp low pass       - 0..1
+> ShpAc   - shape 0 amp clip           - 0..1
+> ShpFfb  - shape 0 freq fund boost    - 0..1
+
+> ShpTb1  - shape 1 time bend          - 0..1
+> ShpTm1  - shape 1 time mirror        - 0..1
+> ShpTw1  - shape 1 time wrap          - 0..1
+> ShpAm1  - shape 1 amp mirror         - 0..1
+> ShpAw1  - shape 1 amp wrap           - 0..1
+> ShpAb1  - shape 1 amp bitreduce      - 0..1
+> ShpAo1  - shape 1 amp octave         - 0..1
+> ShpAop1 - shape 1 amp octave phase   - 0..1
+> ShpAh1  - shape 1 amp high pass      - 0..1
+> ShpAl1  - shape 1 amp low pass       - 0..1
+> ShpAc1  - shape 1 amp clip           - 0..1
+> ShpFfb1 - shape 1 freq fund boost    - 0..1
+> ShpFcp1 - shape 1 freq copy phases   - 0..1
+
+> ShpMrp  - shape morph                - 0..1
+
+
+
+
+global
+
+> VA   - VCA
+
+

@@ -1,0 +1,65 @@
+    tumbetoene: Wolpertinger v0.1
+    Copyright (C) 2009, 2010  Johannes Kroll
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+
+
+ABOUT
+
+Wolpertinger is a subtractive synth with a sharp bandpass filter whose center
+frequency "bounces" around the frequency of the playing notes. Thanks to the
+Juced library it can be used both as a standalone application supporting JACK
+or ALSA audio outputs, and as a VST instrument.
+
+Web: http://tumbetoene.tuxfamily.org/
+Subversion: svn://svn.tuxfamily.org/svnroot/tumbetoene/wolpertinger
+SVN via web: http://svn.tuxfamily.org/viewvc.cgi/tumbetoene_wolpertinger/
+
+
+VERSIONS
+
+0.2 MIDI parameter changes now update the GUI
+    Binaries no longer linked to OpenGL
+    Debug and Release binaries included
+0.1 Initial Release
+
+
+INSTALLATION
+
+The executable binary should run out of the box, no installation needed. The 
+VST shared object (.so) is meant to be loaded into VST-compatible host 
+applications, e. g. Renoise.
+
+
+SOURCE CODE
+
+You can pull the source from the SVN repository. A standard Makefile for GNU 
+make and Code::Blocks project files are included. It may be possible to create
+files for other build environments from the included premake4 script. You can 
+get premake4 from http://industriousone.com/premake .
+
+
+DEPENDENCIES
+
+You need the Juced library to compile the code. You can get Juced from 
+http://code.google.com/p/juced/
+
+Note that you need the VST 2.4 SDK if you want to build the VSTi. Steinberg's 
+license forbids redistribution, so I can't include the SDK. 
+It's free "as in beer" though: you can get it from http://www.steinberg.net/ 
+after doing whatever Steinberg wants you to do (mostly providing a valid email 
+address and staring at their ads for a while).
+
+

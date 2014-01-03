@@ -1,0 +1,1 @@
+premake --file fontserialiser_premake.lua --cc gcc --target gnu

@@ -1,0 +1,131 @@
+====================================================================================
+JUCETICE Jost's Compilation howto ==================================================
+====================================================================================
+
+Mandatory libraries and development packages:
+- libfreetype
+- libpthread
+- librt
+- libX11 
+
+Optional libraries or development packages:
+- libasound
+- libjack
+- liblash
+- libXinerama
+- ladspa-sdk
+- dssi-sdk
+- vstsdk
+
+To compile Jost in few steps:
+# cd jost-v0.5.4/build/linux
+# make CONFIG=Release
+# ../../bin/jost
+
+If you are on amd64/x86_64 and you currently enabled vst you should
+build the 32bit version of jost (which will compile jostbridge also) 
+# cd jost-v0.5.4/build/linux
+# make CONFIG=Release32
+# ../../bin/jost
+
+
+====================================================================================
+Warning ! The next distro specific commands are getting out of date for newer 
+          versions > 0.5.0 !
+====================================================================================
+
+(Gentoo) ___________________________________________________________________________ 
+
+## add the pro audio overlay
+layman -a pro-audio
+
+## emerge it !!!
+USE="ladspa dssi vst" emerge jost
+
+
+
+(Debian) ___________________________________________________________________________ 
+
+## Install the prerequisites
+apt-get install libxml2-dev libjack0.100.0-0 libjack0.100.0-dev \
+                jackd libuuid1 uuid-dev xorg-dev libasound2-dev \
+                dssi-dev dssi-utils ladspa-sdk liblo0
+
+## Get jost and unpack it
+wget http://www.anticore.org/jucetice/get.php?file=jost_src-v0.4.7.tar.bz2
+unp jost_src-v0.4.7.tar.bz2
+
+## You must get the VST SDK yourself. It is unfortunately not redistributable.
+## http://www.steinberg.de/553_1.html 
+unp vst_sdk2_3.zip
+rm -f vstsdk2.3.dmg vstsdk2.3.sit
+unp vstsdk2.3.zip
+cp -a vstsdk2.3/source/* ~/jost-v0.4.7/vst/source
+
+## Now jost should build
+cd jost-v0.4.7/shared
+./configure
+./compile_libs Release
+./compile_jost Release
+
+
+
+(OpenSUSE / SUSE) __________________________________________________________________ 
+
+## Install the prerequisites (using smart / apt-get / yast)
+smart install gcc-c++ xorg-x11-devel alsa-devel dssi jack-devel \
+              ladspa-devel ladspa libsndfile-devel
+
+## Get jost and unpack it
+wget http://www.anticore.org/jucetice/get.php?file=jost_src-v0.4.7.tar.bz2
+tar -xjf jost_src-v0.4.7.tar.bz2
+
+## You must get the VST SDK yourself. It is unfortunately not redistributable.
+## http://www.steinberg.de/553_1.html 
+unzip vst_sdk2_3.zip
+rm -f vstsdk2.3.dmg vstsdk2.3.sit
+unzip vstsdk2.3.zip
+cp -a vstsdk2.3/source/* ~/jost-v0.4.6/vst/source
+
+## Now jost should build
+cd jost-v0.4.7/juce/build/linux
+./configure
+./compile_libs Release
+./compile_jost Release
+
+
+
+(Ubuntu) ___________________________________________________________________________ 
+
+Here is a guide:
+http://ubuntufromscratch.wordpress.com/2007/09/18/jost-le-chainer-de-vst-pour-linux/
+
+
+
+(Fedora / RedHat) __________________________________________________________________ 
+
+*todo
+
+
+
+(Archlinux) ________________________________________________________________________ 
+
+## install prerequisites
+pacman -S libx11 libxinerama pth freetype2 alsa-lib dssi ladspa jack-audio-connection-kit
+
+## Get jost and unpack it
+wget http://www.anticore.org/jucetice/get.php?file=jost_src-v0.4.7.tar.bz2
+unp jost_src-v0.4.7.tar.bz2
+
+## You must get the VST SDK yourself. It is unfortunately not redistributable.
+## http://www.steinberg.de/553_1.html
+unzip vst_sdk2_3.zip
+unzip vstsdk2.3.zip
+cp -a vstsdk2.3/source/* ~/jost-v0.4.7/vst/source
+
+## Now jost should build
+cd jost-v0.4.7/shared
+./configure
+./compile_libs Release
+./compile_jost Release
+

@@ -1,0 +1,357 @@
+@fixes
+- joystick behaves strange (flipping on automation)
+
+@todo
+- introduce compressor on part or master (i think is needed)
+- disable all controls when the part is not enabled
+- in the mixer, use some knobs to control whatever parameter the user wants
+- add clipping indicator to master
+- keep out part stereo selector
+- keep out keyboard note range selector slider
+- add part receive channel selector
+
+
+========================================= effect types
+master->sysefx[i]->seteffectpar (param, value)
+
+0 - No efx -------------------------------------------
+1 - reverb -------------------------------------------
+    0 - volume
+    1 - pan
+    2 - time
+    3 - l delay
+    4 - l delay feedback
+    5 - reflection delay
+    6 - early refelction
+    7 - lowpass
+    8 - higpass
+    9 - damp
+    10 - type (0-random, 1-freeverb)
+    11 - room size
+
+2 - echo ---------------------------------------------
+    0 - volume
+    1 - pan
+    2 - delay time
+    3 - lr delay
+    4 - lr c
+    5 - feedback
+    6 - damp
+
+3 - chorus -------------------------------------------
+    0 - volume
+    1 - pan
+    2 - frequency
+    3 - random
+    4 - lfo types (0-sine, 1-tri)
+    5 - stereo image
+    6 - depth
+    7 - delay
+    8 - feedback
+    9 - l/r
+    10 - ???
+    11 - subtract (0..1)
+
+4 - phaser -------------------------------------------
+    0 - volume
+    1 - pan
+    2 - frequency
+    3 - random
+    4 - lfo types (0-sine, 1-tri)
+    5 - stereo image
+    6 - depth
+    7 - feedback
+    8 - stages (1..MAX_PHASER_STAGES)
+    9 - l/r
+    10 - subtract (0..1)
+    11 - phase
+
+5 - wah ----------------------------------------------
+    0 - volume
+    1 - pan
+    2 - frequency
+    3 - random
+    4 - lfo types (0-sine, 1-tri)
+    5 - stereo image
+    6 - depth
+    7 - feedback
+    8 - delay (1..MAX_ALIENWAH_DELAY)
+    9 - l/r
+    10 - phase
+
+6 - disto --------------------------------------------
+    0 - volume
+    1 - pan
+    2 - lrc (?)
+    3 - drive
+    4 - level
+    5 - type:
+        0 - atan
+        1 - asym1
+        2 - pow
+        3 - sine
+        4 - quantize
+        5 - zigzag
+        6 - limit
+        7 - limit U
+        8 - limit L
+        9 - ilmt
+        10 - clip
+        11 - asym2
+        12 - pow2
+        13 - segmentize
+    6 - negative (0..1)
+    7 - lowpass
+    8 - highpass
+    9 - stereo (0..1)
+    10 - filter pre distortion (0..1)
+
+7 - eq -----------------------------------------------
+    0 - volume
+    ---------- bands (0, MAX_EQ_BANDS - 1)
+    (band * 5 + 10) - type:
+                      0 - off
+                      1 - lp1
+                      2 - hp1
+                      3 - lp2
+                      4 - hp2
+                      5 - bp2
+                      6 - n2
+                      7 - pk
+                      8 - lsh
+                      9 - hsh
+    (band * 5 + 11) - frequency
+    (band * 5 + 12) - gain
+    (band * 5 + 13) - Q
+    (band * 5 + 14) - stages (0, MAX_FILTER_STAGES - 1)
+
+8 - filter -------------------------------------------
+    0 - volume
+    1 - pan
+    2 - frequency
+    3 - random
+    4 - lfo types (0-sine, 1-tri)
+    5 - stereo image
+    6 - lfo depth
+    7 - AS (?)
+    8 - Amplitude modulation invert (0..1)
+    9 - Amplitude modulation
+
+
+======================================== master volume
+    0..127
+-------------------------------------------------------
+    o->value(master->Pvolume);
+-------------------------------------------------------
+    master->setPvolume ((int) o->value());
+
+======================================== fine detune
+    0..127
+-------------------------------------------------------
+    o->value(master->microtonal.Pglobalfinedetune);
+-------------------------------------------------------
+    master->microtonal.Pglobalfinedetune = (int) o->value();
+
+======================================== key shift
+    -64..64
+-------------------------------------------------------
+    o->value (master->Pkeyshift - 64);
+-------------------------------------------------------
+    master->setPkeyshift ((int) o->value() + 64);
+
+======================================== panic mode
+-------------------------------------------------------
+    pthread_mutex_lock (&master->mutex);
+    master->shutup = 1;
+    pthread_mutex_unlock (&master->mutex);
+
+======================================== system effect
+    o->value(master->sysefx[nsyseff]->geteffect());
+-------------------------------------------------------
+    pthread_mutex_lock(&master->mutex);
+    master->sysefx[nsyseff]->changeeffect((int) o->value());
+    pthread_mutex_unlock(&master->mutex);
+
+======================================== insert effect
+    o->value(master->insefx[ninseff]->geteffect());
+    if (master->Pinsparts[ninseff]== -1) o->deactivate();
+------------------------------------------------------
+    pthread_mutex_lock(&master->mutex);
+    master->insefx[ninseff]->changeeffect((int) o->value());
+    pthread_mutex_unlock(&master->mutex);
+
+======================================== insert effect to
+    o->add("Master Out");o->add("Off");
+    char tmp[50]; for (int i=0;i<NUM_MIDI_PARTS;i++) {sprintf(tmp,"Part %2d",i+1);o->add(tmp);};
+    o->value(master->Pinsparts[ninseff]+2);
+-------------------------------------------------------
+    master->Pinsparts[ninseff]=(int) o->value()-2;
+    if ((int) o->value()==1){
+        inseffectuigroup->deactivate();
+        insefftype->deactivate();
+        inseffectui->deactivate();
+    } else {
+        inseffectuigroup->activate();
+        insefftype->activate();
+        inseffectui->activate();
+    };
+    master->insefx[ninseff]->cleanup();
+
+
+======================================== part name
+    (char *)part->Pname
+    (int)   part->info.Ptype
+    (char *)part->info.Pauthor
+    (char *)part->info.Pcomments
+
+======================================== part on off
+    0..1
+-------------------------------------------------------
+    o->value(master->part[npart]->Penabled);
+-------------------------------------------------------
+    pthread_mutex_lock(&master->mutex);
+    master->partonoff(npart,(int) o->value());
+    pthread_mutex_unlock(&master->mutex);
+
+======================================== part note on active
+    0..1
+-------------------------------------------------------
+    o->value(part->Pnoteon);
+-------------------------------------------------------
+    part->Pnoteon=(int) o->value();
+
+======================================== part poly
+    0..1
+-------------------------------------------------------
+    o->value(part->Ppolymode);
+-------------------------------------------------------
+    part->Ppolymode=(int) o->value();
+
+======================================== part poly
+    0..1
+-------------------------------------------------------
+    o->value(part->Ppolymode);
+-------------------------------------------------------
+    part->Ppolymode=(int) o->value();
+
+======================================== part volume
+    0..127
+-------------------------------------------------------
+    o->value(master->part[npart]->Pvolume);
+-------------------------------------------------------
+    master->part[npart]->setPvolume((int) o->value());
+
+======================================== part pan
+    0..127
+-------------------------------------------------------
+    o->value(master->part[npart]->Ppanning);
+-------------------------------------------------------
+    master->part[npart]->setPpanning((int) o->value());
+
+======================================== part velocity
+    0..127
+-------------------------------------------------------
+    o->value(part->Pvelsns);
+//    o->value(part->Pveloffs); // 0
+-------------------------------------------------------
+    part->Pvelsns=(int) o->value();
+//    part->Pveloffs=(int) o->value(); // 0
+
+======================================== part channel
+    0..15
+-------------------------------------------------------
+    o->value(master->part[npart]->Prcvchn);
+-------------------------------------------------------
+    master->part[npart]->Prcvchn=(int) o->value();
+    virkeys->midich=(int) o->value();
+
+======================================== part min key
+    0..127
+-------------------------------------------------------
+    o->value(master->part[npart]->Pminkey);
+-------------------------------------------------------
+    master->part[npart]->Pminkey=(int) o->value();
+
+======================================== part max key
+    0..127
+-------------------------------------------------------
+    o->value(master->part[npart]->Pmaxkey);
+-------------------------------------------------------
+    master->part[npart]->Pmaxkey=(int) o->value();
+
+======================================== part shift
+    -64..64
+-------------------------------------------------------
+    o->value(master->part[npart]->Pkeyshift-64);
+-------------------------------------------------------
+    master->part[npart]->Pkeyshift=(int) o->value()+64;
+
+======================================== part portamento
+    0..1
+-------------------------------------------------------
+    o->value(master->part[npart]->ctl.portamento.portamento);
+    master->part[npart]->ctl.portamento.portamento=(int) o->value();
+
+======================================== part bend range
+    -6400..6400            step 100);
+-------------------------------------------------------
+    part->ctl.pitchwheel.bendrange=(int) o->value();
+
+======================================== part midi controllers
+    part->ctl.volume.receive = 0..1;
+-------------------------------------------------------
+    part->ctl.sustain.receive = 0..1;
+    if (part->ctl.sustain.receive == 0) {
+        part->RelaseSustainedKeys();
+        part->ctl.setsustain(0);
+    };
+-------------------------------------------------------
+    part->ctl.portamento.receive = 0..1;
+    part->ctl.portamento.time = 0..127;
+    part->ctl.portamento.updowntimestretch = 0..127;
+    part->ctl.portamento.pitchthreshtype = 0..1;
+    part->ctl.portamento.pitchthresh = 0..127;
+-------------------------------------------------------
+    part->ctl.fmamp.receive = 0..1
+-------------------------------------------------------
+    part->ctl.expression.receive = 0..1
+-------------------------------------------------------
+    part->ctl.modwheel.exponential = 0..1
+    part->ctl.modwheel.depth = 0..127
+-------------------------------------------------------
+    part->ctl.bandwidth.exponential = 0..1
+    part->ctl.bandwidth.depth = 0..127
+-------------------------------------------------------
+    part->ctl.filterq.depth = 0..127;
+    part->ctl.filtercutoff.depth = 0..127;
+    part->ctl.resonancebandwidth.depth = 0..127;
+    part->ctl.resonancecenter.depth = 0..127;
+    part->ctl.panning.depth = 0..127;
+
+======================================== part effects
+-------------------------------------------------------
+    part->partefx[ninseff];
+-------------------------------------------------------
+
+======================================== part effect bypass
+    0..1
+-------------------------------------------------------
+    int x=part->Pefxbypass[ninseff];o->value(x);
+-------------------------------------------------------
+    part->Pefxbypass[ninseff]=(((int)o->value())!=0);
+
+======================================== part kit mode
+    0..1
+-------------------------------------------------------
+    part->Pkitmode=(int) o->value();
+    part->Pdrummode=(int) o->value();
+    if (part->Pkitmode==0) {
+        kitlist->deactivate();
+    } else {
+    kitlist->activate();
+    };
+
+======================================== part enabled
+    part->kit[0].Padenabled = 0..1;
+    part->kit[0].Psubenabled = 0..1;
+    part->kit[0].Ppadenabled = 0..1;

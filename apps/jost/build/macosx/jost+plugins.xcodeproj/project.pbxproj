@@ -1,0 +1,308 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 42;
+	objects = {
+
+/* Begin PBXAggregateTarget section */
+		93A1D61A1062D1D8007006C1 /* Jost + All Plugins */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = 93A1D6231062D1E7007006C1 /* Build configuration list for PBXAggregateTarget "Jost + All Plugins" */;
+			buildPhases = (
+				93A1D6881062DA85007006C1 /* ShellScript */,
+			);
+			dependencies = (
+				93A1D67A1062D2AB007006C1 /* PBXTargetDependency */,
+				93A1D67C1062D2AB007006C1 /* PBXTargetDependency */,
+				93A1D6801062D2AB007006C1 /* PBXTargetDependency */,
+				93A1D67E1062D2AB007006C1 /* PBXTargetDependency */,
+			);
+			name = "Jost + All Plugins";
+			productName = "Jost VST Plugins";
+		};
+/* End PBXAggregateTarget section */
+
+/* Begin PBXContainerItemProxy section */
+		93A1D6211062D1E7007006C1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93A1D61D1062D1E7007006C1 /* highlife.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8D01CCD20486CAD60068D4B7;
+			remoteInfo = "highlife-vst";
+		};
+		93A1D6301062D1F8007006C1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93A1D62C1062D1F8007006C1 /* drumsynth.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8D01CCD20486CAD60068D4B7;
+			remoteInfo = "drumsynth-vst";
+		};
+		93A1D63C1062D20F007006C1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93A1D6341062D20F007006C1 /* capsaicin.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8D01CCD20486CAD60068D4B7;
+			remoteInfo = "capsaicin-vst";
+		};
+		93A1D6651062D237007006C1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93A1D65C1062D237007006C1 /* jost.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 8D1107320486CEB800E47090 /* jost.app */;
+			remoteInfo = jost;
+		};
+		93A1D6791062D2AB007006C1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93A1D61D1062D1E7007006C1 /* highlife.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7 /* highlife-vst */;
+			remoteInfo = "highlife-vst";
+		};
+		93A1D67B1062D2AB007006C1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93A1D62C1062D1F8007006C1 /* drumsynth.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7 /* drumsynth-vst */;
+			remoteInfo = "drumsynth-vst";
+		};
+		93A1D67D1062D2AB007006C1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93A1D65C1062D237007006C1 /* jost.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D1107260486CEB800E47090 /* jost */;
+			remoteInfo = jost;
+		};
+		93A1D67F1062D2AB007006C1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93A1D6341062D20F007006C1 /* capsaicin.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8D01CCC60486CAD60068D4B7 /* capsaicin-vst */;
+			remoteInfo = "capsaicin-vst";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		93A1D61D1062D1E7007006C1 /* highlife.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = highlife.xcodeproj; path = ../../../highlife/build/macosx/highlife.xcodeproj; sourceTree = SOURCE_ROOT; };
+		93A1D62C1062D1F8007006C1 /* drumsynth.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = drumsynth.xcodeproj; path = ../../../drumsynth/build/macosx/drumsynth.xcodeproj; sourceTree = SOURCE_ROOT; };
+		93A1D6341062D20F007006C1 /* capsaicin.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = capsaicin.xcodeproj; path = ../../../capsaicin/build/macosx/capsaicin.xcodeproj; sourceTree = SOURCE_ROOT; };
+		93A1D65C1062D237007006C1 /* jost.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = jost.xcodeproj; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		93A1D6031062D190007006C1 = {
+			isa = PBXGroup;
+			children = (
+				93A1D68C1062DB58007006C1 /* New Group */,
+				93A1D65C1062D237007006C1 /* jost.xcodeproj */,
+				93A1D6681062D23B007006C1 /* Plugins */,
+			);
+			sourceTree = "<group>";
+		};
+		93A1D61E1062D1E7007006C1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				93A1D6221062D1E7007006C1 /* highlife.vst */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		93A1D62D1062D1F8007006C1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				93A1D6311062D1F8007006C1 /* drumsynth.vst */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		93A1D6351062D20F007006C1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				93A1D63D1062D20F007006C1 /* capsaicin.vst */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		93A1D65D1062D237007006C1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				93A1D6661062D237007006C1 /* jost.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		93A1D6681062D23B007006C1 /* Plugins */ = {
+			isa = PBXGroup;
+			children = (
+				93A1D6341062D20F007006C1 /* capsaicin.xcodeproj */,
+				93A1D62C1062D1F8007006C1 /* drumsynth.xcodeproj */,
+				93A1D61D1062D1E7007006C1 /* highlife.xcodeproj */,
+			);
+			name = Plugins;
+			sourceTree = "<group>";
+		};
+		93A1D68C1062DB58007006C1 /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "New Group";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXProject section */
+		93A1D6051062D190007006C1 /* Project object */ = {
+			isa = PBXProject;
+			buildConfigurationList = 93A1D6081062D190007006C1 /* Build configuration list for PBXProject "jost+plugins" */;
+			compatibilityVersion = "Xcode 2.4";
+			hasScannedForEncodings = 0;
+			mainGroup = 93A1D6031062D190007006C1;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 93A1D6351062D20F007006C1 /* Products */;
+					ProjectRef = 93A1D6341062D20F007006C1 /* capsaicin.xcodeproj */;
+				},
+				{
+					ProductGroup = 93A1D62D1062D1F8007006C1 /* Products */;
+					ProjectRef = 93A1D62C1062D1F8007006C1 /* drumsynth.xcodeproj */;
+				},
+				{
+					ProductGroup = 93A1D61E1062D1E7007006C1 /* Products */;
+					ProjectRef = 93A1D61D1062D1E7007006C1 /* highlife.xcodeproj */;
+				},
+				{
+					ProductGroup = 93A1D65D1062D237007006C1 /* Products */;
+					ProjectRef = 93A1D65C1062D237007006C1 /* jost.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				93A1D61A1062D1D8007006C1 /* Jost + All Plugins */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		93A1D6221062D1E7007006C1 /* highlife.vst */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = highlife.vst;
+			remoteRef = 93A1D6211062D1E7007006C1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		93A1D6311062D1F8007006C1 /* drumsynth.vst */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = drumsynth.vst;
+			remoteRef = 93A1D6301062D1F8007006C1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		93A1D63D1062D20F007006C1 /* capsaicin.vst */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = capsaicin.vst;
+			remoteRef = 93A1D63C1062D20F007006C1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		93A1D6661062D237007006C1 /* jost.app */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.application;
+			path = jost.app;
+			remoteRef = 93A1D6651062D237007006C1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		93A1D6881062DA85007006C1 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "pwd \necho ../../../caspaicin/build/macosx/Build~~/$BUILD_STYLE/\nditto ../../../caspaicin/build/macosx/Build~~/$BUILD_STYLE/ $TARGET_BUILD_DIR\nditto ../../../drumsynth/build/macosx/Build~~/$BUILD_STYLE/ $TARGET_BUILD_DIR\nditto ../../../highlife/build/macosx/Build~~/$BUILD_STYLE/ $TARGET_BUILD_DIR\n\n";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		93A1D67A1062D2AB007006C1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "highlife-vst";
+			targetProxy = 93A1D6791062D2AB007006C1 /* PBXContainerItemProxy */;
+		};
+		93A1D67C1062D2AB007006C1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "drumsynth-vst";
+			targetProxy = 93A1D67B1062D2AB007006C1 /* PBXContainerItemProxy */;
+		};
+		93A1D67E1062D2AB007006C1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = jost;
+			targetProxy = 93A1D67D1062D2AB007006C1 /* PBXContainerItemProxy */;
+		};
+		93A1D6801062D2AB007006C1 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = "capsaicin-vst";
+			targetProxy = 93A1D67F1062D2AB007006C1 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		93A1D6061062D190007006C1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Debug;
+		};
+		93A1D6071062D190007006C1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+			};
+			name = Release;
+		};
+		93A1D61B1062D1D8007006C1 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "Jost + All Plugins";
+			};
+			name = Debug;
+		};
+		93A1D61C1062D1D8007006C1 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				PRODUCT_NAME = "Jost + All Plugins";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		93A1D6081062D190007006C1 /* Build configuration list for PBXProject "jost+plugins" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				93A1D6061062D190007006C1 /* Debug */,
+				93A1D6071062D190007006C1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		93A1D6231062D1E7007006C1 /* Build configuration list for PBXAggregateTarget "Jost + All Plugins" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				93A1D61B1062D1D8007006C1 /* Debug */,
+				93A1D61C1062D1D8007006C1 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 93A1D6051062D190007006C1 /* Project object */;
+}
