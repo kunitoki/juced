@@ -72,7 +72,12 @@ function make_plugin_project (name, kind, do32bit, doAmalgama, libpath)
         end
     end
 
-    project.name = name
+    bits = "64"
+    if do32bit then
+        bits = "32"
+    end
+
+    project.name = name .. bits
     project.bindir = libpath
     project.libdir = libpath
     project.configs = { "Debug", "Release" }
@@ -87,13 +92,13 @@ function make_plugin_project (name, kind, do32bit, doAmalgama, libpath)
     package.kind = kind
     package.language = "c++"
     package.linkflags = { "static-runtime" }
-    package.objdir = project.bindir .. "/intermediate_" .. OS
+    package.objdir = project.bindir .. "/intermediate_" .. OS .. "_" .. bits
     package.includepaths = {}
     package.defines = {}
     package.libpaths = { libpath }
     package.links = {}
 
-    if (doAmalgama or finaleRelease) then
+    if (doAmalgama or finalRelease) then
         print ("...enabled AMALGAMA support")
         table.insert (package.defines, "JUCETICE_USE_AMALGAMA=1")
         if (finalRelease) then
@@ -176,7 +181,7 @@ function configure_standard_options_gnu (package, do32bit, doAmalgama, link_with
     addoption ("enable-xinerama", "Enable Xinerama support (default disabled)")
     addoption ("enable-glx",      "Enable GLX support for ARGB visuals (default disabled)")
     addoption ("enable-sqlite",   "Enable SQLITE support (default disabled)")
-    addoption ("vstsdk-version",  "Specify version of VSTSDK (default 2.3)")
+    addoption ("vstsdk-version",  "Specify version of VSTSDK (default 2.4)")
 
     if (package.kind == "dll") then
         package.targetprefix = ""

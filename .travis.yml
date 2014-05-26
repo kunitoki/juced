@@ -11,3 +11,4 @@ before_script:
   - cd ./tools/linux/
 script:
   - ./manage make lib
+  - ./manage make jost
