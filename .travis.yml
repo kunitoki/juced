@@ -5,7 +5,7 @@ compiler:
 before_install:
   - sudo add-apt-repository ppa:codegear/release -y
   - sudo apt-get update -qq
-  - sudo apt-get install -qq premake4 build-essential gcc
+  - sudo apt-get install -qq premake4 build-essential gcc-multilib
   - sudo apt-get install -qq libasound2-dev ladspa-sdk-dev
 before_script:
   - cd ./vst/ && wget http://www.anticore.org/juced/vstsdk2.4.tar.gz && tar -xvzf vstsdk2.4.tar.gz
