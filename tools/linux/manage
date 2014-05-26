@@ -70,16 +70,10 @@ function make_library
     local current=`pwd`
 
     cd "$juce_directory/build/linux"
-    touch `find "$juce_directory/build/linux" -iname "*.c*" | head -n 1`
-
     $premake_bin $premake_file $premake_options $1 $2 $3 $4 $5 $6 $7 $8
-    echo
     make CONFIG=Debug
-    echo
     make CONFIG=Release
-    echo
     make CONFIG=Release32
-    echo
 
     if [ $? = 0 ]; then
         echo "==== Finalizing juce ===="
@@ -105,14 +99,9 @@ function make_application
             if [ -d "$compileprefix" ]; then
                 cd "$compileprefix"
                 $premake_bin $premake_file $premake_options $2 $3 $4 $5 $6 $7 $8
-                echo
-                touch `find "$srcdir" -iname "*.c*" | head -n 1`
-        	    make CONFIG=Release -j8
-        	    echo
-        	    make CONFIG=Release32 -j8
-                echo
             	make CONFIG=Debug -j8
-            	echo
+        	    make CONFIG=Release -j8
+        	    make CONFIG=Release32 -j8
 	            cd "$current"
             fi
         done
@@ -123,7 +112,6 @@ function make_application
             if [ -d "$compileprefix" ]; then
                 cd "$compileprefix"
                 $premake_bin $premake_file $premake_win32_options $2 $3 $4 $5 $6 $7 $8
-                echo
 	            cd "$current"
             fi
         done
@@ -149,14 +137,9 @@ function make_tests
         if [ -d "$compileprefix" ]; then
             cd "$compileprefix"
             $premake_bin $premake_file $premake_options $1 $2 $3 $4 $5 $6 $7 $8
-            echo
-            touch `find "$srcdir" -iname "*.c*" | head -n 1`
-    	    make CONFIG=Release -j8
-    	    echo
-    	    make CONFIG=Release32 -j8
-    	    echo
         	make CONFIG=Debug -j8
-        	echo
+    	    make CONFIG=Release -j8
+    	    make CONFIG=Release32 -j8
             cd $current
         fi
     done
@@ -179,9 +162,9 @@ function clean_library
     local current=`pwd`
 
     cd "$juce_directory/build/linux"
-    make CONFIG=Release32 clean
-    make CONFIG=Release clean
     make CONFIG=Debug clean
+    make CONFIG=Release clean
+    make CONFIG=Release32 clean
 
     cd "$current"
 }
@@ -198,9 +181,9 @@ function clean_application
             compileprefix="$name/$project"
             if [ -d "$compileprefix" ]; then
                 cd "$compileprefix"
-                make CONFIG=Release32 clean
-                make CONFIG=Release clean
             	make CONFIG=Debug clean
+                make CONFIG=Release clean
+                make CONFIG=Release32 clean
               	rm -Rf "$compileprefix/../../$bin_directory"
 	            cd "$current"
             fi
