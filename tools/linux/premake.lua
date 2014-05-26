@@ -27,12 +27,14 @@ function make_library_project (name)
     package.config["Debug"].objdir            = package.objdir .. "/" .. project.name .. "Debug"
     package.config["Debug"].defines           = { "DEBUG=1", "_DEBUG=1" }
     package.config["Debug"].buildoptions      = { "-O0 -g -Wall -fPIC" }
+    package.config["Debug"].links             = { "dl" }
 
     package.config["Release"].target          = project.name
     package.config["Release"].objdir          = package.objdir .. "/" .. project.name .. "Release"
     package.config["Release"].defines         = { "NDEBUG=1" }
     package.config["Release"].buildoptions    = { "-O2 -pipe -fvisibility=hidden -Wall -fPIC" }
     package.config["Release"].buildflags      = configure_default_release_options ()
+    package.config["Release"].links           = { "dl" }
 
     package.config["Release32"].target        = project.name .. "32"
     package.config["Release32"].objdir        = package.objdir .. "/" .. project.name .. "Release32"
@@ -40,6 +42,7 @@ function make_library_project (name)
     package.config["Release32"].linkoptions   = { "-melf_i386" }
     package.config["Release32"].buildoptions  = { "-m32 -O2 -pipe -fvisibility=hidden -Wall -fPIC" }
     package.config["Release32"].buildflags    = configure_default_release_options ()
+    package.config["Release32"].links         = { "dl" }
 
     package = configure_standard_options (package, false, false, false)
 
