@@ -188,6 +188,7 @@ function configure_standard_options_gnu (package, do32bit, doAmalgama, link_with
     table.insert (package.links, "freetype")
     table.insert (package.links, "pthread")
     table.insert (package.links, "rt")
+    table.insert (package.links, "dl")
     table.insert (package.links, "X11")
     table.insert (package.links, "Xext")
     table.insert (package.includepaths, "/usr/include")

@@ -11,3 +11,7 @@
 *.lai
 *.la
 *.a
+
+# unwanted files
+bin/*
+vst/vstsdk*/

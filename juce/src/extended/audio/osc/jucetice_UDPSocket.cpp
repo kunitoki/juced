@@ -33,6 +33,7 @@
 #ifdef WIN32
   #include <winsock.h>
 #else
+  #include <unistd.h>
   #include <sys/types.h>
   #include <sys/socket.h>
   #include <sys/select.h>

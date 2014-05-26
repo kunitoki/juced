@@ -25,6 +25,10 @@
 
 #include "../../../core/juce_StandardHeader.h"
 
+#if JUCE_LINUX
+  #include <unistd.h>
+#endif
+
 BEGIN_JUCE_NAMESPACE
 
 #include "juce_FileChooser.h"
