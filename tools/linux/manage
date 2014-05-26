@@ -71,9 +71,9 @@ function make_library
 
     cd "$juce_directory/build/linux"
     $premake_bin $premake_file $premake_options $1 $2 $3 $4 $5 $6 $7 $8
-    make CONFIG=Debug
-    make CONFIG=Release
-    make CONFIG=Release32
+    #make CONFIG=Debug -j8
+    make CONFIG=Release -j8
+    #make CONFIG=Release32 -j8
 
     if [ $? = 0 ]; then
         echo "==== Finalizing juce ===="
@@ -99,22 +99,22 @@ function make_application
             if [ -d "$compileprefix" ]; then
                 cd "$compileprefix"
                 $premake_bin $premake_file $premake_options $2 $3 $4 $5 $6 $7 $8
-            	make CONFIG=Debug -j8
+            	#make CONFIG=Debug -j8
         	    make CONFIG=Release -j8
-        	    make CONFIG=Release32 -j8
+        	    #make CONFIG=Release32 -j8
 	            cd "$current"
             fi
         done
 
-        for project in VST_win32
-        do
-            compileprefix="$name/$project"
-            if [ -d "$compileprefix" ]; then
-                cd "$compileprefix"
-                $premake_bin $premake_file $premake_win32_options $2 $3 $4 $5 $6 $7 $8
-	            cd "$current"
-            fi
-        done
+        #for project in VST_win32
+        #do
+        #    compileprefix="$name/$project"
+        #    if [ -d "$compileprefix" ]; then
+        #        cd "$compileprefix"
+        #        $premake_bin $premake_file $premake_win32_options $2 $3 $4 $5 $6 $7 $8
+	    #        cd "$current"
+        #    fi
+        #done
 
     else
         echo "==== Error in make_application ===="
