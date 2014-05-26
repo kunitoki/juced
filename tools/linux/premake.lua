@@ -44,27 +44,22 @@ function make_library_project (name)
     package.config["Release32"].buildflags    = configure_default_release_options ()
     package.config["Release32"].links         = { "dl" }
 
-    package = configure_standard_options (package, false, false, false)
+    package = configure_standard_options (package, false, false)
 
     return package
 end
 
 --======================================================================================
-function make_plugin_project (name, kind, do32bit, doAmalgama, libpath) 
+function make_plugin_project (name, kind, doAmalgama, libpath) 
 
     print ("==== Configuring " .. name .. " ====")
     print ("Configuring GNU makefiles:")
 
     finalRelease = false
     overrideAmalgama = false
-    override32bit = false
     
     if overrideAmalgama then
         doAmalgama = true
-    end
-
-    if override32bit then
-        do32bit = false
     end
 
     if (libpath) then
@@ -75,17 +70,12 @@ function make_plugin_project (name, kind, do32bit, doAmalgama, libpath)
         end
     end
 
-    bits = "64"
-    if do32bit then
-        bits = "32"
-    end
-
-    project.name = name .. bits
+    project.name = name
     project.bindir = libpath
     project.libdir = libpath
     project.configs = { "Debug", "Release" }
 
-    if (do32bit and target == "gnu") then
+    if (target == "gnu") then
         table.insert (project.configs, "Release32")
     end
 
@@ -95,7 +85,7 @@ function make_plugin_project (name, kind, do32bit, doAmalgama, libpath)
     package.kind = kind
     package.language = "c++"
     package.linkflags = { "static-runtime" }
-    package.objdir = project.bindir .. "/intermediate_" .. OS .. "_" .. bits
+    package.objdir = project.bindir .. "/intermediate_" .. OS
     package.includepaths = {}
     package.defines = {}
     package.libpaths = { libpath }
@@ -112,24 +102,24 @@ function make_plugin_project (name, kind, do32bit, doAmalgama, libpath)
         end
     end
 
-    package = configure_standard_options (package, do32bit, doAmalgama, true)
+    package = configure_standard_options (package, doAmalgama, true)
 
     return package
 end
 
 --======================================================================================
-function configure_standard_options (package, do32bit, doAmalgama, link_with_libraries)
+function configure_standard_options (package, doAmalgama, link_with_libraries)
 
     if (target == "gnu") then
-        return configure_standard_options_gnu (package, do32bit, doAmalgama, link_with_libraries)
+        return configure_standard_options_gnu (package, doAmalgama, link_with_libraries)
     else
-        return configure_standard_options_win (package, do32bit, doAmalgama, link_with_libraries)
+        return configure_standard_options_win (package, doAmalgama, link_with_libraries)
     end
 
 end
 
 --======================================================================================
-function configure_standard_options_win (package, do32bit, doAmalgama, link_with_libraries)
+function configure_standard_options_win (package, doAmalgama, link_with_libraries)
 
     addoption ("vstsdk-version",  "Specify version of VSTSDK (default 2.4)")
 
@@ -174,7 +164,7 @@ function configure_standard_options_win (package, do32bit, doAmalgama, link_with
 end
 
 --======================================================================================
-function configure_standard_options_gnu (package, do32bit, doAmalgama, link_with_libraries)
+function configure_standard_options_gnu (package, doAmalgama, link_with_libraries)
 
     addoption ("disable-alsa",    "Disable ALSA support (this will disable also midi)")
     addoption ("disable-jack",    "Disable jack-audio-connection-kit")
@@ -225,17 +215,15 @@ function configure_standard_options_gnu (package, do32bit, doAmalgama, link_with
         package.config["Release"].links       = { "juce" }
     end
 
-    if (do32bit) then
-        package.config["Release32"].target        = package.name
-        package.config["Release32"].objdir        = package.objdir .. "/" .. package.name .. "Release32"
-        package.config["Release32"].defines       = { "NDEBUG=1" }
-        package.config["Release32"].buildoptions  = { "-m32 -pipe -fvisibility=hidden -Wall -fPIC" }
-        package.config["Release32"].buildflags    = configure_default_release_options ()
-        package.config["Release32"].libpaths      = { "/usr/X11R6/lib32/", "/usr/lib32/" }
-        package.config["Release32"].linkoptions   = { "-melf_i386" }
-        if (not doAmalgama) and (link_with_libraries) then
-            package.config["Release32"].links     = { "juce32" }
-        end
+    package.config["Release32"].target        = package.name .. "32"
+    package.config["Release32"].objdir        = package.objdir .. "/" .. package.name .. "Release32"
+    package.config["Release32"].defines       = { "NDEBUG=1" }
+    package.config["Release32"].buildoptions  = { "-m32 -pipe -fvisibility=hidden -Wall -fPIC" }
+    package.config["Release32"].buildflags    = configure_default_release_options ()
+    package.config["Release32"].libpaths      = { "/usr/X11R6/lib32/", "/usr/lib32/" }
+    package.config["Release32"].linkoptions   = { "-melf_i386" }
+    if (not doAmalgama) and (link_with_libraries) then
+        package.config["Release32"].links     = { "juce32" }
     end
 
     -- configure step for libraries ---------------------------------------
@@ -420,9 +408,9 @@ end
 --======================================================================================
 function configure_default_release_options ()
     return { "no-symbols",
-             "optimize-speed",
-             "no-frame-pointer",
-             "no-pch",
-             "no-edit-and-continue" }
+              "optimize-speed",
+              "no-frame-pointer",
+              "no-pch",
+              "no-edit-and-continue" }
 end
 
