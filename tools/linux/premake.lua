@@ -50,7 +50,7 @@ function make_library_project (name)
 end
 
 --======================================================================================
-function make_plugin_project (name, kind, libpath) 
+function make_plugin_project (name, kind, __, libpath) 
 
     print ("==== Configuring " .. name .. " ====")
     print ("Configuring GNU makefiles:")
