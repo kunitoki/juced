@@ -20,6 +20,8 @@ amalgamator_bin="$tools_directory/amalgamator"
 OPERATION="usage"
 SUBJECTS="lib"
 
+# == handle errors ===============================================
+set -o errexit
 
 # == handle parameter ============================================
 #while getopts "make:clean:exec:package:what:help" option
