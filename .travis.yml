@@ -5,7 +5,7 @@ compiler:
 before_install:
   - sudo add-apt-repository ppa:codegear/release -y
   - sudo apt-get update -qq
-  - sudo apt-get install -qq premake4 build-essential gcc-multilib lib32stdc++6 libc6-dev-i386
+  - sudo apt-get install -qq premake4 build-essential gcc-multilib libc6-dev lib32stdc++6 libc6-dev-i386
   - sudo apt-get install -qq libasound2-dev ladspa-sdk-dev
   - sudo ln -s /usr/lib32/libstdc++.so.6 /usr/lib32/libstdc++.so
 before_script:
@@ -13,6 +13,7 @@ before_script:
   - wget http://www.anticore.org/juced/vstsdk2.4.tar.gz
   - tar -xvzf vstsdk2.4.tar.gz
   - cd ../tools/linux/
+  - find /usr/lib -name "libdl*"
 script:
   - ./manage make lib
   - ./manage make jost
