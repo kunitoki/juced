@@ -68,11 +68,7 @@ function make_plugin_project (name, kind, __, libpath)
     project.name = name
     project.bindir = libpath
     project.libdir = libpath
-    project.configs = { "Debug", "Release" }
-
-    if (target == "gnu") then
-        table.insert (project.configs, "Release32")
-    end
+    project.configs = { "Debug", "Release", "Release32" }
 
     package = newpackage()
     package.name = project.name
@@ -167,11 +163,11 @@ function configure_standard_options_gnu (package, link_with_libraries)
 
     -- configuration setup ----------------------------------------------
     table.insert (package.defines, "LINUX=1")
-    table.insert (package.links, "freetype")
-    table.insert (package.links, "pthread")
     table.insert (package.links, "rt")
     table.insert (package.links, "dl")
     table.insert (package.links, "m")
+    table.insert (package.links, "pthread")
+    table.insert (package.links, "freetype")
     table.insert (package.links, "X11")
     table.insert (package.links, "Xext")
     table.insert (package.includepaths, "/usr/include")
@@ -186,7 +182,7 @@ function configure_standard_options_gnu (package, link_with_libraries)
     package.config["Debug"].defines           = { "DEBUG=1", "_DEBUG=1" }
     package.config["Debug"].buildoptions      = { "-O0 -g -Wall -fPIC" }
     package.config["Debug"].libpaths          = { "/usr/X11R6/lib/", "/usr/lib/" }
-    if (not doAmalgama) and (link_with_libraries) then
+    if (link_with_libraries) then
         package.config["Debug"].links         = { "juce_debug" }
     end
 
@@ -196,7 +192,7 @@ function configure_standard_options_gnu (package, link_with_libraries)
     package.config["Release"].buildoptions    = { "-pipe -fvisibility=hidden -Wall -fPIC" }
     package.config["Release"].buildflags      = configure_default_release_options ()
     package.config["Release"].libpaths        = { "/usr/X11R6/lib/", "/usr/lib/" }
-    if (not doAmalgama) and (link_with_libraries) then
+    if (link_with_libraries) then
         package.config["Release"].links       = { "juce" }
     end
 
@@ -207,7 +203,7 @@ function configure_standard_options_gnu (package, link_with_libraries)
     package.config["Release32"].buildflags    = configure_default_release_options ()
     package.config["Release32"].libpaths      = { "/usr/X11R6/lib32/", "/usr/lib32/" }
     package.config["Release32"].linkoptions   = { "-melf_i386" }
-    if (not doAmalgama) and (link_with_libraries) then
+    if (link_with_libraries) then
         package.config["Release32"].links     = { "juce32" }
     end
 
