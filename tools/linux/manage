@@ -15,7 +15,6 @@ premake_options="--cc gcc --target gnu --os linux"
 premake_win32_options="--target vs2010 --os windows"
 
 premake_bin="$tools_directory/premake"
-amalgamator_bin="$tools_directory/amalgamator"
 
 OPERATION="usage"
 SUBJECTS="lib"
@@ -74,12 +73,6 @@ function make_library
     #make CONFIG=Debug -j8
     make CONFIG=Release -j8
     #make CONFIG=Release32 -j8
-
-    #if [ $? = 0 ]; then
-    #    echo "==== Finalizing juce ===="
-    #    cd $root_directory
-    #    $amalgamator_bin juce | grep writing
-    #fi
 
     cd "$current"
 }

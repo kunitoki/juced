@@ -50,17 +50,12 @@ function make_library_project (name)
 end
 
 --======================================================================================
-function make_plugin_project (name, kind, doAmalgama, libpath) 
+function make_plugin_project (name, kind, libpath) 
 
     print ("==== Configuring " .. name .. " ====")
     print ("Configuring GNU makefiles:")
 
     finalRelease = false
-    overrideAmalgama = false
-    
-    if overrideAmalgama then
-        doAmalgama = true
-    end
 
     if (libpath) then
     else
@@ -91,35 +86,24 @@ function make_plugin_project (name, kind, doAmalgama, libpath)
     package.libpaths = { libpath }
     package.links = {}
 
-    if (doAmalgama or finalRelease) then
-        print ("...enabled AMALGAMA support")
-        table.insert (package.defines, "JUCETICE_USE_AMALGAMA=1")
-        if (finalRelease) then
-            package.excludes = {
-                "../../src/juce_amalgamated.cpp",
-                "../../src/juce_amalgamated.h"
-            }
-        end
-    end
-
-    package = configure_standard_options (package, doAmalgama, true)
+    package = configure_standard_options (package, true)
 
     return package
 end
 
 --======================================================================================
-function configure_standard_options (package, doAmalgama, link_with_libraries)
+function configure_standard_options (package, link_with_libraries)
 
     if (target == "gnu") then
-        return configure_standard_options_gnu (package, doAmalgama, link_with_libraries)
+        return configure_standard_options_gnu (package, link_with_libraries)
     else
-        return configure_standard_options_win (package, doAmalgama, link_with_libraries)
+        return configure_standard_options_win (package, link_with_libraries)
     end
 
 end
 
 --======================================================================================
-function configure_standard_options_win (package, doAmalgama, link_with_libraries)
+function configure_standard_options_win (package, link_with_libraries)
 
     addoption ("vstsdk-version",  "Specify version of VSTSDK (default 2.4)")
 
@@ -164,7 +148,7 @@ function configure_standard_options_win (package, doAmalgama, link_with_librarie
 end
 
 --======================================================================================
-function configure_standard_options_gnu (package, doAmalgama, link_with_libraries)
+function configure_standard_options_gnu (package, link_with_libraries)
 
     addoption ("disable-alsa",    "Disable ALSA support (this will disable also midi)")
     addoption ("disable-jack",    "Disable jack-audio-connection-kit")
