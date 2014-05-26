@@ -1,6 +1,6 @@
 juced
 =====
 
-[![Build Status](https://api.travis-ci.org/kunitoki/juced.png)](https://travis-ci.org/kunitoki/juced)
+[![Build Status](https://travis-ci.org/kunitoki/juced.svg)](https://travis-ci.org/kunitoki/juced)
 
 community based juce
